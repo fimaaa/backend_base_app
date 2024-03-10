@@ -2,7 +2,10 @@
   "api_app_base" : {
     "api_url":"127.0.0.1:3000",
     "secret_token":"",
-    "refresh_secret_token":""
+    "refresh_secret_token":"",
+    "static_token": "",
+    "token_confidentiality_minute": 10,
+    "refresh_token_confidentiality_minute": 100
   },
   "database": {
     "mongodb": {
@@ -16,12 +19,5 @@
   "firebase_db": {
     "database_url": "url",
     "database_name": "db_name"
-  },
-  "redis": {
-    "host": "203.210.84.108",
-    "database": 0,
-    "user": "",
-    "password": "masuk123",
-    "port": 6379
-  },
+  }
 }

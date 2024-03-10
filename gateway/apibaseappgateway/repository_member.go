@@ -20,9 +20,9 @@ import (
 type CreateMemberDataRepo interface {
 	CreateMemberData(ctx context.Context, obj entity.MemberData) error
 	FindOneMemberDataById(ctx context.Context, id string) (*entity.MemberDataShown, error)
-	UpdateMemberData(ctx context.Context, id string) (*entity.MemberDataShown, error)
+	UpdateMemberData(ctx context.Context, memberData entity.MemberDataShown) (*entity.MemberDataShown, error)
 	FindAllMemberData(ctx context.Context, req entity.BaseReqFind) ([]*entity.MemberDataShown, int64, error)
-	MemberLoginAuthorization(ctx context.Context, obj entity.MemberAuth) (*entity.MemberDataShown, error)
+	MemberLoginAuthorization(ctx context.Context, obj entity.MemberReqAuth) (*entity.MemberDataShown, error)
 }
 
 type memberCollection struct {
@@ -190,7 +190,8 @@ func (r GatewayApiBaseApp) FindOneMemberDataById(ctx context.Context, id string)
 	)
 
 	coll := r.getMemberCollection()
-	err = coll.FindOne(ctx, bson.M{"id": id}).Decode(&resultMemberData)
+	resCol := coll.FindOne(ctx, bson.M{"id": id})
+	err = resCol.Decode(&resultMemberData)
 	if err != nil {
 		log.Error(ctx, err.Error())
 
@@ -201,32 +202,30 @@ func (r GatewayApiBaseApp) FindOneMemberDataById(ctx context.Context, id string)
 
 		return nil, err
 	}
+	fmt.Println("TAG resCol ", resCol)
+	fmt.Println("TAG FINDONEBYID ", resultMemberData.CreatedAt)
 
 	return &resultMemberData, nil
 }
 
-func (r GatewayApiBaseApp) UpdateMemberData(ctx context.Context, id string) (*entity.MemberDataShown, error) {
+func (r GatewayApiBaseApp) UpdateMemberData(ctx context.Context, memberData entity.MemberDataShown) (*entity.MemberDataShown, error) {
 
 	log.Info(ctx, "called")
 
-	var (
-		clientData *entity.MemberDataShown
-		err        error
-	)
-	clientData, err = r.FindOneMemberDataById(ctx, id)
-	if err != nil {
+	clientData, err := r.FindOneMemberDataById(ctx, memberData.ID)
+	if err != nil || clientData == nil {
 		return clientData, err
 	}
 
-	clientData.UpdatedAt = time.Now().Local().UTC()
+	memberData.UpdatedAt = time.Now().Local().UTC()
 
-	info, err := r.MongoWithTransactionImpl.SaveOrUpdateByCustomId(ctx, r.database, entity.CollectionMember, id, clientData)
+	info, err := r.MongoWithTransactionImpl.SaveOrUpdateByCustomId(ctx, r.database, entity.CollectionMember, memberData.ID, memberData)
 	log.Info(ctx, "info >>> ", info)
 	if err != nil {
 		log.Info(ctx, "error >>> "+err.Error())
 	}
 
-	return clientData, err
+	return &memberData, err
 }
 
 func (r GatewayApiBaseApp) FindAllMemberData(ctx context.Context, req entity.BaseReqFind) ([]*entity.MemberDataShown, int64, error) {
@@ -259,7 +258,7 @@ func (r GatewayApiBaseApp) FindAllMemberData(ctx context.Context, req entity.Bas
 	return objs, count, err
 }
 
-func (r GatewayApiBaseApp) MemberLoginAuthorization(ctx context.Context, obj entity.MemberAuth) (*entity.MemberDataShown, error) {
+func (r GatewayApiBaseApp) MemberLoginAuthorization(ctx context.Context, obj entity.MemberReqAuth) (*entity.MemberDataShown, error) {
 	log.Info(ctx, "called")
 
 	var (
@@ -276,12 +275,14 @@ func (r GatewayApiBaseApp) MemberLoginAuthorization(ctx context.Context, obj ent
 	}
 
 	if resultMemberDataShown.IsSuspend {
-		err = entity.NewMyError("This is a custom error message")
+		err = entity.NewMyError("Account is Suspended")
 		return resultMemberDataShown, err
 	}
 
 	loc, _ := time.LoadLocation("Asia/Jakarta")
 	resultMemberDataShown.LastLogin = time.Now().In(loc)
+
+	fmt.Println("DEVICE ID ", obj.DeviceId)
 
 	if obj.DeviceId != "" {
 		resultMemberDataShown.DeviceId = obj.DeviceId
@@ -290,8 +291,24 @@ func (r GatewayApiBaseApp) MemberLoginAuthorization(ctx context.Context, obj ent
 		resultMemberDataShown.TokenBroadcast = obj.TokenBroadcast
 	}
 
+	// memberData := entity.MemberData{
+	// 	ID:             entity.MemberDataID(resultMemberDataShown.ID),
+	// 	Username:       resultMemberDataShown.Username,
+	// 	Fullname:       resultMemberDataShown.Fullname,
+	// 	MemberType:     resultMemberDataShown.MemberType,
+	// 	IsSuspend:      resultMemberDataShown.IsSuspend,
+	// 	CreatedAt:      resultMemberDataShown.CreatedAt,
+	// 	UpdatedAt:      resultMemberDataShown.UpdatedAt,
+	// 	TokenBroadcast: resultMemberDataShown.TokenBroadcast,
+	// 	LastLogin:      resultMemberDataShown.LastLogin,
+	// 	DeviceId:       resultMemberDataShown.DeviceId,
+	// 	PhoneNumber:    resultMemberDataShown.PhoneNumber,
+	// 	Email:          resultMemberDataShown.Email,
+	// 	MemberPhoto:    resultMemberDataShown.MemberPhoto,
+	// }
+
 	//update latest login
-	return r.UpdateMemberData(ctx, resultMemberDataShown.ID)
+	return r.UpdateMemberData(ctx, *resultMemberDataShown)
 }
 
 const DataRegistraionHasTaken domerror.ErrorType = "ER1006 data registration has been taken"

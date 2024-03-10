@@ -9,6 +9,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gosimple/slug v1.14.0
 	github.com/matoous/go-nanoid/v2 v2.0.0
+	gopkg.in/resty.v1 v1.12.0
 	gorm.io/driver/postgres v1.5.6
 	gorm.io/driver/sqlite v1.5.5
 	gorm.io/gorm v1.25.7

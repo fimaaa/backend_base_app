@@ -1,24 +1,52 @@
 @BASE_URL_LOCALHOST = http://localhost:3000
 @BASE_URL = {{BASE_URL_LOCALHOST}}
-@TOKEN = temp
-@REFRESH_TOKEN = temp
+@TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTAwODAwNTEsImp0aSI6IntcImlkXCI6XCJNZW1iZXItMjQwMzEwMTM0NTIxXCIsXCJ1c2VybmFtZVwiOlwiZmltYWFhXCIsXCJmdWxsbmFtZVwiOlwiRlwiLFwibWVtYmVyX3R5cGVcIjpcImNsaWVudFwiLFwiaXNfc3VzcGVuZFwiOmZhbHNlLFwiY3JlYXRlZF9hdFwiOlwiMjAyNC0wMy0xMFQwNjo0NToyMS40OTlaXCIsXCJ1cGRhdGVkX2F0XCI6XCIyMDI0LTAzLTEwVDE0OjEzOjExLjM1NzU4NTVaXCIsXCJ0b2tlbl9icm9hZGNhc3RcIjpcIlwiLFwibGFzdF9sb2dpblwiOlwiMDAwMS0wMS0wMVQwMDowMDowMFpcIixcImlkX2RldmljZVwiOlwiXCIsXCJwaG9uZV9udW1iZXJcIjpcIjA4MTIzNDU2Nzg5XCIsXCJlbWFpbFwiOlwidGVzdEB0ZXN0LmNvbVwiLFwicGhvdG9fbWVtYmVyXCI6XCJcIn0ifQ.y5Z9B2LXf9QBGPvZ2hQNOg5uzhTSr3vJ_NREFTq6J3k
+@REFRESH_TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTAwOTk5OTMsImp0aSI6IntcIklkXCI6XCJNZW1iZXItMjQwMzEwMTM0NTIxXCIsXCJEZXZpZGVJZFwiOlwid2ViXCJ9In0.X46c0Pihpd6RSFdJYh1k278tFu2Dlmshh-QfVugrQIo
 
 ### Ping
 GET {{BASE_URL}}/ping
 Content-Type: application/json
 
+
+###---------AUTHORIZATION----------###
+@AUTH_URL = /api/v1/auth
+### LOGIN AUTH
+POST {{BASE_URL}}{{AUTH_URL}}/login
+Content-Type: application/json
+
+{
+  "username": "fimaaa",
+  "password":"25f9e794323b453885f5181f1b624d0b",
+  "token_broadcast":"",
+  "id_device":"web"
+}
+
+### REFRESH AUTH
+POST {{BASE_URL}}{{AUTH_URL}}/refresh
+Content-Type: application/json
+Authorization: Bearer {{REFRESH_TOKEN}}
+
+{
+    "user":"id"
+}
+
 ###----------MEMBER----------###
 
 ### CREATE MEMBER
-POST {{BASE_URL}}/api/v1/member/create
+@MEMBER_URL = /api/v1/member
+POST {{BASE_URL}}{{MEMBER_URL}}/create
 Content-Type: application/json
+
 {
-  "username": "",
-  "fullname": "",
-  "password":"",
-  "member_type":"",
-  
-  "phone_number":"",
-  "email": "",
+  "username": "fimaaa",
+  "fullname": "F",
+  "password":"123456789",
+  "member_type":"client",
+  "phone_number":"08123456789",
+  "email": "test@test.com",
   "photo_member":""
 }
+
+### GET ALL MEMBER
+GET {{BASE_URL}}{{MEMBER_URL}}?page=1&size=5
+Content-Type: application/json

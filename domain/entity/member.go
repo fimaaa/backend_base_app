@@ -59,14 +59,14 @@ type CreateMemberData struct {
 	MemberPhoto *string `json:"photo_member"`
 }
 
-type MemberAuth struct {
+type MemberReqAuth struct {
 	Username       string `json:"username"`
 	Password       string `json:"password"`
 	TokenBroadcast string `json:"token_broadcast"`
 	DeviceId       string `json:"id_device"`
 }
 
-type MemberDataShown struct {
+type MemberResAuth struct {
 	ID         string    `json:"id"`
 	Username   string    `json:"username"`
 	Fullname   string    `json:"fullname"`
@@ -83,6 +83,26 @@ type MemberDataShown struct {
 	PhoneNumber string `json:"phone_number"`
 	Email       string `json:"email"`
 	MemberPhoto string `json:"photo_member"`
+
+	Token        string `json:"token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+type MemberDataShown struct {
+	ID             string    `json:"id" bson:"id"`
+	Username       string    `json:"username" bson:"username"`
+	Fullname       string    `json:"fullname" bson:"fullname"`
+	MemberType     string    `json:"member_type" bson:"member_type"`
+	IsSuspend      bool      `json:"is_suspend" bson:"is_suspend"`
+	CreatedAt      time.Time `json:"created_at" bson:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at" bson:"updated_at"`
+	TokenBroadcast string    `json:"token_broadcast" bson:"token_broadcast"`
+	LastLogin      time.Time `json:"last_login" bson:"last_login"`
+	DeviceId       string    `json:"id_device" bson:"id_device"`
+	// Info
+	PhoneNumber string `json:"phone_number" bson:"phone_number"`
+	Email       string `json:"email" bson:"email"`
+	MemberPhoto string `json:"photo_member" bson:"photo_member"`
 }
 
 type MemberDataFind struct {
@@ -124,6 +144,7 @@ func (r CreateMemberData) ValidateCreate() error {
 }
 
 func (r MemberData) ToShown() MemberDataShown {
+	fmt.Println("MAP DATA TO SHOWN", r)
 	return MemberDataShown{
 		ID:         r.ID.String(),
 		Username:   r.Username,

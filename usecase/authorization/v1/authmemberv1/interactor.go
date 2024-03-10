@@ -1,4 +1,4 @@
-package loginmemberv1
+package authmemberv1
 
 import (
 	"backend_base_app/domain/entity"
@@ -16,10 +16,16 @@ func NewUsecase(outputPort Outport) Inport {
 	}
 }
 
-func (r *apibaseappmembercreateInteractor) Execute(ctx context.Context, req *entity.MemberAuth) (*entity.MemberDataShown, error) {
-	res := &entity.MemberDataShown{}
+func (r *apibaseappmembercreateInteractor) Execute(ctx context.Context, req entity.MemberReqAuth) (*entity.MemberDataShown, error) {
+	response := &entity.MemberDataShown{}
 
 	err := dbhelpers.WithoutTransaction(ctx, r.outport, func(ctx context.Context) error {
+		res, err := r.outport.MemberLoginAuthorization(ctx, req)
+		if err != nil {
+			return err
+		}
+
+		response = res
 
 		return nil
 	})
@@ -27,5 +33,5 @@ func (r *apibaseappmembercreateInteractor) Execute(ctx context.Context, req *ent
 		return nil, err
 	}
 
-	return res, nil
+	return response, nil
 }

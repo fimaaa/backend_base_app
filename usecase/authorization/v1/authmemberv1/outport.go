@@ -1,4 +1,4 @@
-package loginmemberv1
+package authmemberv1
 
 import (
 	"backend_base_app/domain/service"
@@ -7,7 +7,6 @@ import (
 )
 
 type Outport interface {
-	service.GenerateIDService
 	service.EncryptPasswordService
 	apibaseappgateway.CreateMemberDataRepo
 	dbhelpers.WithoutTransactionDB
