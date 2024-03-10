@@ -1,0 +1,24 @@
+@BASE_URL_LOCALHOST = http://localhost:3000
+@BASE_URL = {{BASE_URL_LOCALHOST}}
+@TOKEN = temp
+@REFRESH_TOKEN = temp
+
+### Ping
+GET {{BASE_URL}}/ping
+Content-Type: application/json
+
+###----------MEMBER----------###
+
+### CREATE MEMBER
+POST {{BASE_URL}}/api/v1/member/create
+Content-Type: application/json
+{
+  "username": "",
+  "fullname": "",
+  "password":"",
+  "member_type":"",
+  
+  "phone_number":"",
+  "email": "",
+  "photo_member":""
+}
