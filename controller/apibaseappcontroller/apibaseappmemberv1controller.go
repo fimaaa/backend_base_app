@@ -9,6 +9,7 @@ import (
 	"backend_base_app/usecase/member/v1/getallmemberv1"
 	"backend_base_app/usecase/member/v1/getmemberv1"
 	"fmt"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -59,9 +60,20 @@ func ApiBaseAppMemberFindAll(r *Controller) gin.HandlerFunc {
 			r.Helper.SendBadRequest(c, err.Error(), newErr, traceID)
 			return
 		}
+		var reqValue entity.MemberDataFind
+		c.BindQuery(&reqValue)
+		req.Value = reqValue
 
-		fmt.Println("TAG ApiBaseAppMemberFindAll ", c.Query("page"))
-		fmt.Println("TAG FINDALL REQ ", req)
+		sortByParams := make(map[string]interface{})
+		// Loop through all query parameters
+		for key, value := range c.Request.URL.Query() {
+			// Check if the key contains "sort_by_"
+			if strings.HasPrefix(key, "sort_by_") {
+				trimmedKey := strings.TrimPrefix(key, "sort_by_")
+				sortByParams[trimmedKey] = value
+			}
+		}
+		req.SortBy = sortByParams
 
 		res, count, err := inputPort.Execute(ctx, req)
 

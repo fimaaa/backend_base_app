@@ -29,17 +29,17 @@ func (r MemberDataID) String() string {
 }
 
 type MemberData struct {
-	ID             MemberDataID `json:"id" bson:"id"`
-	Username       string       `json:"username" bson:"username"`
-	Fullname       string       `json:"fullname" bson:"fullname"`
-	Password       string       `json:"password" bson:"password"`
-	MemberType     string       `json:"member_type" bson:"member_type"`
-	IsSuspend      bool         `json:"is_suspend" bson:"is_suspend"`
-	CreatedAt      time.Time    `json:"created_at" bson:"created_at"`
-	UpdatedAt      time.Time    `json:"updated_at" bson:"updated_at"`
-	TokenBroadcast string       `json:"token_broadcast" bson:"token_broadcast"`
-	LastLogin      time.Time    `json:"last_login" bson:"last_login"`
-	DeviceId       string       `json:"id_device" bson:"id_device"`
+	ID             MemberDataID `json:"id" bson:"id" form:"id"`
+	Username       string       `json:"username" bson:"username" form:"username"`
+	Fullname       string       `json:"fullname" bson:"fullname" form:"fullname"`
+	Password       string       `json:"password" bson:"password" form:"password"`
+	MemberType     string       `json:"member_type" bson:"member_type" form:"member_type"`
+	IsSuspend      bool         `json:"is_suspend" bson:"is_suspend" form:"is_suspend"`
+	CreatedAt      time.Time    `json:"created_at" bson:"created_at" form:"created_at"`
+	UpdatedAt      time.Time    `json:"updated_at" bson:"updated_at" form:"updated_at"`
+	TokenBroadcast string       `json:"token_broadcast" bson:"token_broadcast" form:"token_broadcast"`
+	LastLogin      time.Time    `json:"last_login" bson:"last_login" form:"last_login"`
+	DeviceId       string       `json:"id_device" bson:"id_device" form:"id_device"`
 
 	// Info
 	PhoneNumber string `json:"phone_number" bson:"phone_number"`
@@ -106,16 +106,16 @@ type MemberDataShown struct {
 }
 
 type MemberDataFind struct {
-	Username      string
-	Fullname      string
-	MemberType    string
-	IsSuspend     *bool
-	CreatedAtFrom *time.Time
-	CreatedAtTo   *time.Time
-	UpdatedAtFrom *time.Time
-	UpdatedAtTo   *time.Time
-	LastLoginFrom *time.Time
-	LastLoginTo   *time.Time
+	Username      string     `form:"username"`
+	Fullname      string     `form:"fullname"`
+	MemberType    string     `form:"member_type"`
+	IsSuspend     *bool      `form:"is_suspend"`
+	CreatedAtFrom *time.Time `form:"created_at_from"`
+	CreatedAtTo   *time.Time `form:"created_at_to"`
+	UpdatedAtFrom *time.Time `form:"updated_at_from"`
+	UpdatedAtTo   *time.Time `form:"updated_at_to"`
+	LastLoginFrom *time.Time `form:"last_login_from"`
+	LastLoginTo   *time.Time `form:"last_login_to"`
 
 	// Info
 	PhoneNumber string `json:"phone_number"`

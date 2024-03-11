@@ -48,7 +48,7 @@ Content-Type: application/json
 }
 
 ### GET ALL MEMBER
-GET {{BASE_URL}}{{MEMBER_URL}}?page=1&size=5
+GET {{BASE_URL}}{{MEMBER_URL}}?page=1&size=5&username=qra 
 Content-Type: application/json
 
 {

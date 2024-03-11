@@ -65,9 +65,9 @@ func getFilterKeyword(
 		keyword := bson.M{"is_suspend": obj.IsSuspend}
 		keywordFilter = append(keywordFilter, keyword)
 	}
-	if obj.CreatedAtFrom != nil {
+	if obj.CreatedAtFrom != nil && !obj.CreatedAtFrom.IsZero() {
 		createdAtTo := time.Now()
-		if obj.CreatedAtTo != nil {
+		if obj.CreatedAtTo != nil && !obj.CreatedAtTo.IsZero() {
 			createdAtTo = *obj.CreatedAtTo
 		}
 		keyword := bson.M{
@@ -79,9 +79,9 @@ func getFilterKeyword(
 		// Append the date filter to the keywordFilter slice
 		keywordFilter = append(keywordFilter, keyword)
 	}
-	if obj.UpdatedAtFrom != nil {
+	if obj.UpdatedAtFrom != nil && !obj.UpdatedAtFrom.IsZero() {
 		updatedAtTo := time.Now()
-		if obj.UpdatedAtTo != nil {
+		if obj.UpdatedAtTo != nil && !obj.UpdatedAtTo.IsZero() {
 			updatedAtTo = *obj.UpdatedAtTo
 		}
 		keyword := bson.M{
@@ -94,9 +94,9 @@ func getFilterKeyword(
 		// Append the date filter to the keywordFilter slice
 		keywordFilter = append(keywordFilter, keyword)
 	}
-	if obj.LastLoginFrom != nil {
+	if obj.LastLoginFrom != nil && !obj.LastLoginFrom.IsZero() {
 		lastLoginTo := time.Now()
-		if obj.LastLoginTo != nil {
+		if obj.LastLoginTo != nil && !obj.LastLoginTo.IsZero() {
 			lastLoginTo = *obj.LastLoginTo
 		}
 		keyword := bson.M{
@@ -202,9 +202,6 @@ func (r GatewayApiBaseApp) FindOneMemberDataById(ctx context.Context, id string)
 
 		return nil, err
 	}
-	fmt.Println("TAG resCol ", resCol)
-	fmt.Println("TAG FINDONEBYID ", resultMemberData.CreatedAt)
-
 	return &resultMemberData, nil
 }
 
@@ -284,32 +281,12 @@ func (r GatewayApiBaseApp) MemberLoginAuthorization(ctx context.Context, obj ent
 	loc, _ := time.LoadLocation("Asia/Jakarta")
 	resultMemberDataShown.LastLogin = time.Now().In(loc)
 
-	fmt.Println("DEVICE ID ", obj.DeviceId)
-
 	if obj.DeviceId != "" {
 		resultMemberDataShown.DeviceId = obj.DeviceId
 	}
 	if obj.TokenBroadcast != "" {
 		resultMemberDataShown.TokenBroadcast = obj.TokenBroadcast
 	}
-
-	// memberData := entity.MemberData{
-	// 	ID:             entity.MemberDataID(resultMemberDataShown.ID),
-	// 	Username:       resultMemberDataShown.Username,
-	// 	Fullname:       resultMemberDataShown.Fullname,
-	// 	MemberType:     resultMemberDataShown.MemberType,
-	// 	IsSuspend:      resultMemberDataShown.IsSuspend,
-	// 	CreatedAt:      resultMemberDataShown.CreatedAt,
-	// 	UpdatedAt:      resultMemberDataShown.UpdatedAt,
-	// 	TokenBroadcast: resultMemberDataShown.TokenBroadcast,
-	// 	LastLogin:      resultMemberDataShown.LastLogin,
-	// 	DeviceId:       resultMemberDataShown.DeviceId,
-	// 	PhoneNumber:    resultMemberDataShown.PhoneNumber,
-	// 	Email:          resultMemberDataShown.Email,
-	// 	MemberPhoto:    resultMemberDataShown.MemberPhoto,
-	// }
-
-	//update latest login
 	return r.UpdateMemberData(ctx, *resultMemberDataShown)
 }
 
