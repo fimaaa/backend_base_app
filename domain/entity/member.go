@@ -60,10 +60,10 @@ type CreateMemberData struct {
 }
 
 type MemberReqAuth struct {
-	Username       string `json:"username"`
-	Password       string `json:"password"`
-	TokenBroadcast string `json:"token_broadcast"`
-	DeviceId       string `json:"id_device"`
+	Username       string `json:"username" form:"username"`
+	Password       string `json:"password" form:"password"`
+	TokenBroadcast string `json:"token_broadcast" form:"token_broadcast"`
+	DeviceId       string `json:"id_device" form:"id_device"`
 }
 
 type MemberResAuth struct {

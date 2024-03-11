@@ -268,7 +268,9 @@ func (r GatewayApiBaseApp) MemberLoginAuthorization(ctx context.Context, obj ent
 
 	coll := r.getMemberCollection()
 
-	err = coll.FindOne(ctx, bson.M{"username": obj.Username, "password": obj.Password}).Decode(&resultMemberDataShown)
+	encryptPassword := r.EncryptPassword(ctx, obj.Password)
+
+	err = coll.FindOne(ctx, bson.M{"username": obj.Username, "password": encryptPassword}).Decode(&resultMemberDataShown)
 
 	if err != nil {
 		return resultMemberDataShown, err
