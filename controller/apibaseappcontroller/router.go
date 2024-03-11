@@ -48,6 +48,6 @@ func (r *Controller) RegisterGroupV1Member(groupParent *gin.RouterGroup) {
 	group := groupParent.Group("/member")
 
 	group.POST("/create", ApiBaseAppMemberCreate(r))
-	group.GET("" /* r.handlerAuthMember() ,*/, ApiBaseAppMemberFindAll(r))
+	group.GET("", r.handlerAuthMember(), ApiBaseAppMemberFindAll(r))
 	group.GET("/:id", r.handlerAuthMember(), ApiBaseAppMemberFindOne(r))
 }
